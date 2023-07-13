@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Admin Dashboard </title>
+    <%- include ('layout/head') -%>
+</head>
+<body>
+    <%- include ('layout/nav') -%>
+    <!-- add new post -->
+    <div class="container">
+
+        <a href="/admin/posts/new" class="btn btn-success pull-right"> Add new post </a>
+    </div>
+
+    <!-- posts table -->
+    <div class="container">
+        <h2>Posts</h2>           
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Author</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(data && data.posts){ %>
+                        <% for(var i = data.posts.length - 1; i >= 0; i--){ %>
+                            <tr>
+                                <td> <%= data.posts[i].id %></td>
+                                <td> <%= data.posts[i].title %></td>
+                                <td> <%= data.posts[i].content %></td>
+                                <td> <%= data.posts[i].author %></td>
+                                <td> <%= data.posts[i].created_at %></td>
+                                <td> <%= data.posts[i].updated_at %></td>
+                                <td style="width: 100px">
+                                    <a href="/admin/post/edit/<%= data.posts[i].id %>" class="btn btn-primary btn-sm" id="btn-edit"> <i class="glyphicon glyphicon-edit"></i> </a>
+                                    <button class="btn btn-danger btn-sm" id="btn-delete" post_id="<%= data.posts[i].id %>"> <i class="glyphicon glyphicon-erase"></i> </button>
+                                </td>
+                            </tr>
+                        <% } %>                  
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <script text="text/javascript" src="/static/js/post.js"></script>  
+
+</body>
+</html>

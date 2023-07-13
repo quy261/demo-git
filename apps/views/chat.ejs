@@ -1,0 +1,84 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Socket.io</title>
+    <link rel="stylesheet" href="/static/css/chat.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- For demo purpose-->
+        <header class="header">
+            <h1 class="title">Chat with Socket.io</h1>
+        </header>
+
+        <div class="body-chat">
+            <!-- Chat Box-->
+            <div class="chat-box">
+                <ul id="chat-station">
+
+                </ul>
+            </div>
+
+            <!-- Typing area -->
+            <form action="#" class="form-input-button">
+                <div class="input-button">
+                    <textarea type="text" placeholder="Type a message" id="input"></textarea>
+                    <button id="button-send" class="button" type="submit"> Send </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script text="text/javascipt">
+        let socket = io.connect("http://localhost:3000");
+
+        socket.on("connect", function(){
+            console.log("User is connecting to server...");
+
+            // ask client name 
+            let userName;
+            while(typeof userName != "string" || userName === ""){
+                userName = prompt("Your name is ...");
+            }
+            // notify to server
+                socket.emit("addUser", userName);
+        });
+
+        // updateMember UI display
+        socket.on("update", function(data){
+            $("#chat-station").append(
+                "<li> <b>" + data.sender + ": </b>" + data.message + "</li> <hr>"
+            )
+        });
+
+        // send message event
+        $("#button-send").click(function(e){
+            let msg = $("textarea").val();
+            console.log(msg.length);
+            if(msg.trim().length){
+                socket.emit("sendMsg", msg);
+            }
+            $("textarea").val("")
+        })
+        // Stop form
+        $("form").submit(function(){
+            return false;
+        })
+        // enter
+        $("#input").keypress(function(e){
+            // console/log(e.which);
+            if(e.which == 13){
+                $("#button-send").trigger("click");
+            }
+        })
+
+    </script>
+</body>
+
+</html>
